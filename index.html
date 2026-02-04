@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестирование: Социальное проектирование</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e3e9f7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a5f7a, #2a9d8f);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .test-container, .results {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .test-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid #2a9d8f;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-card h3 {
+            color: #1a5f7a;
+            margin-bottom: 10px;
+        }
+        
+        .test-info {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-number {
+            color: #2a9d8f;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .option.selected {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #21867a;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .progress-container {
+            margin-bottom: 25px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #2a9d8f;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .results {
+            text-align: center;
+        }
+        
+        .results-icon {
+            font-size: 4rem;
+            color: #2a9d8f;
+            margin: 20px 0;
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1a5f7a;
+            margin: 20px 0;
+        }
+        
+        .grade {
+            font-size: 1.5rem;
+            color: #28a745;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .results-details {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: left;
+        }
+        
+        .results-details h3 {
+            margin-bottom: 15px;
+            color: #1a5f7a;
+        }
+        
+        .result-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-item.correct {
+            color: #28a745;
+        }
+        
+        .result-item.incorrect {
+            color: #e76f51;
+        }
+        
+        .time-info {
+            font-style: italic;
+            color: #6c757d;
+            margin-top: 20px;
+        }
+        
+        .lesson-content {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .lesson-content h4 {
+            color: #264653;
+            margin-bottom: 10px;
+        }
+        
+        .lesson-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-project-diagram"></i> Тестирование по социальному проектированию</h1>
+            <p class="subtitle">Проверьте свои знания в области социального проектирования</p>
+        </header>
+        
+        <div class="content">
+            <!-- Экран выбора теста -->
+            <div id="test-selection" class="active">
+                <h2>Доступные тесты</h2>
+                <p>Выберите тест для проверки ваших знаний</p>
+                
+                <div id="lessons-list">
+                    <!-- Тесты будут загружены здесь -->
+                </div>
+            </div>
+            
+            <!-- Экран тестирования -->
+            <div id="test-container" class="test-container">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progress-text">Вопрос 1 из 10</span>
+                        <span id="timer">Осталось времени: 20:00</span>
+                    </div>
+                </div>
+                
+                <div id="question-container">
+                    <!-- Вопросы будут загружены здесь -->
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" id="prev-btn" disabled>
+                        <i class="fas fa-arrow-left"></i> Предыдущий вопрос
+                    </button>
+                    <button class="btn" id="next-btn">
+                        Следующий вопрос <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-success" id="submit-btn" style="display: none;">
+                        Завершить тест <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Экран результатов -->
+            <div id="results" class="results">
+                <div class="results-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2>Тест завершен!</h2>
+                <div class="score" id="final-score">0%</div>
+                <div class="grade" id="grade">Оценка: Неудовлетворительно</div>
+                <p id="result-message">Вы можете пройти тест еще раз для улучшения результата.</p>
+                
+                <div class="results-details">
+                    <h3>Детализация результатов</h3>
+                    <div id="results-list">
+                        <!-- Детали результатов будут загружены здесь -->
+                    </div>
+                </div>
+                
+                <div class="time-info">
+                    <p id="time-spent">Время прохождения: 0 минут</p>
+                    <p id="completion-date">Дата прохождения: </p>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn" id="retry-btn">
+                        <i class="fas fa-redo"></i> Пройти другой тест
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Система тестирования по социальному проектированию © 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // Данные по умолчанию - тест по социальному проектированию
+        const defaultTest = {
+            id: "social-project",
+            title: "Основы социального проектирования",
+            description: "Тест по основам социального проектирования. 11 вопросов на проверку понимания ключевых концепций.",
+            content: `
+                <h4>Что такое социальное проектирование?</h4>
+                <p>Социальное проектирование — это процесс создания, планирования и реализации проектов, направленных на решение социальных проблем или удовлетворение потребностей целевых групп.</p>
+                
+                <h4>Ключевые особенности социальных проектов:</h4>
+                <ul>
+                    <li>Ориентация на решение общественно значимых проблем</li>
+                    <li>Фокус на изменениях в жизни целевой группы</li>
+                    <li>Ограниченность во времени</li>
+                    <li>Наличие конкретных измеримых результатов</li>
+                </ul>
+                
+                <h4>Основные этапы социального проектирования:</h4>
+                <ol>
+                    <li>Диагностика проблемы и анализ целевой группы</li>
+                    <li>Планирование (цели, задачи, мероприятия, ресурсы)</li>
+                    <li>Реализация запланированных мероприятий</li>
+                    <li>Оценка результатов и устойчивости проекта</li>
+                </ol>
+            `,
+            timeLimit: 20,
+            questions: [
+                {
+                    question: "Какое главное отличие социального проекта от «обычного» проекта?",
+                    options: [
+                        "Использование только государственных источников финансирования.",
+                        "Ориентация на решение общественно значимой проблемы и изменение ситуации для целевой группы.",
+                        "Извлечение максимальной прибыли для инициаторов проекта.",
+                        "Отсутствие чётко определённой цели и результатов"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Какое утверждение наилучшим образом отражает определение социального проекта?",
+                    options: [
+                        "Ограниченная во времени деятельность, которая направлена на достижение заранее запланированного результата — решение проблемы или удовлетворение потребности целевой группы.",
+                        "Любая благотворительная акция, проводимая один раз в год.",
+                        "Набор мероприятий для продвижения бренда на рынке.",
+                        "Постоянная деятельность организации по оказанию услуг населению."
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Что является определяющим признаком социального проекта?",
+                    options: [
+                        "Использование современных цифровых технологий.",
+                        "Обязательное участие государственных органов.",
+                        "Ориентация на решение конкретной социальной проблемы целевой группы.",
+                        "Наличие большого бюджета и внешнего финансирования."
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Чем социальный проект принципиально отличается от текущей деятельности организации?",
+                    options: [
+                        "Социальный проект реализуется только волонтёрами, а текущая деятельность — только штатными сотрудниками.",
+                        "Текущая деятельность всегда коммерческая, а социальный проект — всегда благотворительный.",
+                        "Текущая деятельность бесконечна, а социальный проект имеет ограниченные сроки и конкретные результаты.",
+                        "Социальный проект не требует планирования в отличие от текущей деятельности."
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Что в контексте социального проектирования означает понятие «целевая группа»?",
+                    options: [
+                        "Все жители региона, в котором реализуется проект.",
+                        "Организация-спонсор, финансирующая проект.",
+                        "Конкретная совокупность людей, на решение проблемы или реализацию потребности которых направлен социальный проект.",
+                        "Команда специалистов, реализующих проект."
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Какой из перечисленных этапов обычно идёт первым в логике социального проектирования?",
+                    options: [
+                        "Анализ социальной проблемы и целевой группы.",
+                        "Оценка результатов проекта и его устойчивости.",
+                        "Реализация запланированных мероприятий.",
+                        "Планирование бюджета и поиск ресурсов."
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Что наиболее точно характеризует этап «реализация» в цикле социального проекта?",
+                    options: [
+                        "Непосредственное выполнение запланированных мероприятий и действий с целевой группой.",
+                        "Формулировка целей и задач проекта.",
+                        "Поиск партнёров и источников финансирования.",
+                        "Оценка достигнутых результатов и их устойчивости."
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Какое из утверждений лучше всего описывает этап «диагностика проблемы» в социальном проектировании?",
+                    options: [
+                        "Подготовка отчётности по уже реализованным мероприятиям",
+                        "Составление сметы проекта и поиск финансирования",
+                        "Разработка логотипа и визуального стиля проекта",
+                        "Сбор и анализ информации о ситуации целевой группы, причинах и проявлениях проблемы"
+                    ],
+                    correct: 3
+                },
+                {
+                    question: "Какое из утверждений лучше всего иллюстрирует этап «планирование» в жизненном цикле социального проекта?",
+                    options: [
+                        "Исключительно написание заявки на грант без анализа логики проекта.",
+                        "Определение цели, задач, показателей, ресурсов и последовательности мероприятий.",
+                        "Только подбор команды без уточнения содержания проекта.",
+                        "Случайный выбор действий по мере появления возможностей."
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Какое высказывание наиболее точно отражает отличие социального проекта от разовой акции (мероприятия)?",
+                    options: [
+                        "Социальный проект всегда проводится в онлайн-формате, а акция — офлайн.",
+                        "Акция — это часть более широкой проектной логики, проект — это система взаимосвязанных действий, ведущих к изменениям.",
+                        "Проект не включает мероприятий, только аналитическую работу.",
+                        "Акция всегда бесплатна для участников, а проект — платный."
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Какое утверждение лучше всего отражает принцип «фокус на изменениях в жизни людей» в социальном проекте?",
+                    options: [
+                        "Основная цель — приобрести оборудование и материалы для организации.",
+                        "Главное — перечислить как можно больше мероприятий в календарном плане проекта.",
+                        "Важнее всего описать используемые методы и технологии.",
+                        "Ключевое — сформулировать, что именно изменится в состоянии, возможностях или поведении целевой группы."
+                    ],
+                    correct: 3
+                }
+            ]
+        };
+
+        // Переменные состояния
+        let currentTest = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let startTime = null;
+        let timerInterval = null;
+        let timeLeft = 0;
+
+        // Элементы DOM
+        const testSelectionEl = document.getElementById('test-selection');
+        const testContainerEl = document.getElementById('test-container');
+        const resultsEl = document.getElementById('results');
+        const questionContainerEl = document.getElementById('question-container');
+        const progressFillEl = document.getElementById('progress-fill');
+        const progressTextEl = document.getElementById('progress-text');
+        const timerEl = document.getElementById('timer');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const finalScoreEl = document.getElementById('final-score');
+        const gradeEl = document.getElementById('grade');
+        const resultMessageEl = document.getElementById('result-message');
+        const resultsListEl = document.getElementById('results-list');
+        const timeSpentEl = document.getElementById('time-spent');
+        const completionDateEl = document.getElementById('completion-date');
+        const lessonsList = document.getElementById('lessons-list');
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            // Загружаем тесты
+            loadLessons();
+            
+            // Обработчики для навигации теста
+            prevBtn.addEventListener('click', showPreviousQuestion);
+            nextBtn.addEventListener('click', showNextQuestion);
+            submitBtn.addEventListener('click', finishTest);
+            
+            // Обработчик для кнопки "Пройти другой тест"
+            retryBtn.addEventListener('click', () => {
+                showScreen('test-selection');
+                resetTest();
+            });
+        });
+
+        // Загрузить тесты
+        function loadLessons() {
+            lessonsList.innerHTML = '';
+            
+            // Создаем карточку для основного теста
+            const testCard = document.createElement('div');
+            testCard.className = 'test-card';
+            testCard.setAttribute('data-test-id', defaultTest.id);
+            
+            // Подсчет вопросов
+            const questionCount = defaultTest.questions.length;
+            
+            testCard.innerHTML = `
+                <h3>${defaultTest.title}</h3>
+                <p>${defaultTest.description || 'Без описания'}</p>
+                <div class="lesson-content">
+                    ${defaultTest.content || '<p>Теоретический материал не добавлен.</p>'}
+                </div>
+                <div class="test-info">
+                    <span><i class="far fa-clock"></i> ${defaultTest.timeLimit || 20} минут</span>
+                    <span><i class="far fa-question-circle"></i> ${questionCount} вопросов</span>
+                </div>
+            `;
+            
+            testCard.addEventListener('click', () => {
+                startTest(defaultTest);
+            });
+            
+            lessonsList.appendChild(testCard);
+            
+            // Добавляем еще один тестовый тест для демонстрации
+            const demoTest = {
+                ...defaultTest,
+                id: "demo-test",
+                title: "Демонстрационный тест",
+                description: "Короткий демонстрационный тест для ознакомления с системой.",
+                questions: defaultTest.questions.slice(0, 5) // Берем только 5 вопросов для демо
+            };
+            
+            const demoTestCard = document.createElement('div');
+            demoTestCard.className = 'test-card';
+            demoTestCard.setAttribute('data-test-id', demoTest.id);
+            
+            demoTestCard.innerHTML = `
+                <h3>${demoTest.title}</h3>
+                <p>${demoTest.description}</p>
+                <div class="test-info">
+                    <span><i class="far fa-clock"></i> 10 минут</span>
+                    <span><i class="far fa-question-circle"></i> ${demoTest.questions.length} вопросов</span>
+                </div>
+            `;
+            
+            demoTestCard.addEventListener('click', () => {
+                startTest(demoTest);
+            });
+            
+            lessonsList.appendChild(demoTestCard);
+        }
+
+        // Начать тест
+        function startTest(test) {
+            currentTest = test;
+            currentQuestionIndex = 0;
+            userAnswers = new Array(currentTest.questions.length).fill(null);
+            timeLeft = (currentTest.timeLimit || 20) * 60;
+            startTime = new Date();
+            
+            showScreen('test-container');
+            startTimer();
+            loadQuestion();
+            updateProgress();
+        }
+
+        // Показать определенный экран
+        function showScreen(screenId) {
+            testSelectionEl.classList.remove('active');
+            testContainerEl.classList.remove('active');
+            resultsEl.classList.remove('active');
+            
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Запустить таймер
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        // Обновить отображение таймера
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `Осталось времени: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Загрузить текущий вопрос
+        function loadQuestion() {
+            const question = currentTest.questions[currentQuestionIndex];
+            
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                optionsHtml += `
+                    <div class="option ${isSelected ? 'selected' : ''}" data-index="${index}">
+                        ${option}
+                    </div>
+                `;
+            });
+            
+            questionContainerEl.innerHTML = `
+                <div class="question-container">
+                    <div class="question-number">Вопрос ${currentQuestionIndex + 1} из ${currentTest.questions.length}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-container">${optionsHtml}</div>
+                </div>
+            `;
+            
+            // Обработчики для вариантов ответа
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const selectedIndex = parseInt(option.getAttribute('data-index'));
+                    userAnswers[currentQuestionIndex] = selectedIndex;
+                    
+                    // Сбросить выделение у всех вариантов
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Выделить выбранный вариант
+                    option.classList.add('selected');
+                    
+                    // Активировать кнопку "Завершить тест", если это последний вопрос
+                    if (currentQuestionIndex === currentTest.questions.length - 1) {
+                        submitBtn.style.display = 'block';
+                        nextBtn.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Обновить состояние кнопок навигации
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === currentTest.questions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // Обновить прогресс
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / currentTest.questions.length) * 100;
+            progressFillEl.style.width = `${progress}%`;
+            progressTextEl.textContent = `Вопрос ${currentQuestionIndex + 1} из ${currentTest.questions.length}`;
+        }
+
+        // Показать предыдущий вопрос
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        // Показать следующий вопрос
+        function showNextQuestion() {
+            if (currentQuestionIndex < currentTest.questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        // Завершить тест
+        function finishTest() {
+            clearInterval(timerInterval);
+            
+            // Подсчет результатов
+            let correctAnswers = 0;
+            currentTest.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = Math.round((correctAnswers / currentTest.questions.length) * 100);
+            const timeSpent = new Date() - startTime;
+            const minutesSpent = Math.floor(timeSpent / 60000);
+            const secondsSpent = Math.floor((timeSpent % 60000) / 1000);
+            const completionDate = new Date();
+            
+            // Отображение результатов
+            finalScoreEl.textContent = `${score}%`;
+            gradeEl.textContent = `Оценка: ${getGrade(score)}`;
+            resultMessageEl.textContent = getResultMessage(score);
+            timeSpentEl.textContent = `Время прохождения: ${minutesSpent} мин ${secondsSpent} сек`;
+            completionDateEl.textContent = `Дата прохождения: ${completionDate.toLocaleDateString('ru-RU')}`;
+            
+            // Детализация результатов
+            let resultsHtml = '';
+            currentTest.questions.forEach((question, index) => {
+                const userAnswerIndex = userAnswers[index];
+                const isCorrect = userAnswerIndex === question.correct;
+                const userAnswer = userAnswerIndex !== null ? question.options[userAnswerIndex] : "Нет ответа";
+                const correctAnswer = question.options[question.correct];
+                
+                resultsHtml += `
+                    <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div>
+                            <strong>Вопрос ${index + 1}:</strong> ${question.question}
+                            <div style="margin-top: 5px; font-size: 0.9rem;">
+                                Ваш ответ: ${userAnswer}<br>
+                                ${!isCorrect ? `<span style="color: #28a745;">Правильный ответ: ${correctAnswer}</span>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            ${isCorrect ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsListEl.innerHTML = resultsHtml;
+            
+            showScreen('results');
+        }
+
+        // Сброс теста
+        function resetTest() {
+            currentTest = null;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            startTime = null;
+            timeLeft = 0;
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        // Получить оценку по баллам
+        function getGrade(score) {
+            if (score >= 90) return "Отлично";
+            if (score >= 75) return "Хорошо";
+            if (score >= 60) return "Удовлетворительно";
+            return "Неудовлетворительно";
+        }
+
+        // Получить сообщение по результатам
+        function getResultMessage(score) {
+            if (score >= 90) return "Превосходный результат! Вы отлично знаете материал по социальному проектированию.";
+            if (score >= 75) return "Хороший результат! Вы хорошо разбираетесь в основах социального проектирования.";
+            if (score >= 60) return "Удовлетворительный результат. Есть над чем поработать, но основы усвоены.";
+            return "Вам нужно лучше подготовиться. Рекомендуем изучить материал еще раз.";
+        }
+    </script>
+</body>
+</html>
